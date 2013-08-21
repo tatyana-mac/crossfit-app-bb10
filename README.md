@@ -1,0 +1,1 @@
+This native Cascades app allows users to log their Crossfit workouts and track their progress.
