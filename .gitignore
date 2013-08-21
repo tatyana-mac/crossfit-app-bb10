@@ -1,0 +1,35 @@
+#################
+## Eclipse
+#################
+
+.DS_Store
+*.pydevproject
+.project
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+config.pri
+assets/.assets.index
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# PDT-specific
+.buildpath
+
+# Cascades-specific
+arm/
+x86/
+.preview*
+.device
