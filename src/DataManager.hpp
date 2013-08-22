@@ -14,9 +14,9 @@ class DataManager: public QObject
 public:
     DataManager();
 
-    Q_INVOKABLE bool createRecord(const QString &firstName, const QString &lastName);
+    Q_INVOKABLE bool createRecord(const QString& strength, const QString& wod);
     Q_INVOKABLE void readRecords();
-    Q_INVOKABLE bool updateRecord(const QString &key, const QString &firstName, const QString &lastName);
+    Q_INVOKABLE bool updateRecord(const QString &key, const QString& strength, const QString& wod);
     Q_INVOKABLE bool deleteRecord(const QString &key);
 
 private:

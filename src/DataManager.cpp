@@ -14,6 +14,7 @@ DataManager::DataManager()
 {
     initDataModel();
     initDatabase();
+    readRecords();
 }
 
 void DataManager::initDataModel()
@@ -36,9 +37,9 @@ bool DataManager::initDatabase()
         return false;
     }
 
-    // remove this once basic operations are working
     QSqlQuery query(database);
-    if (query.exec("DROP TABLE IF EXISTS workouts"))
+    // remove this once basic operations are working
+    /*if (query.exec("DROP TABLE IF EXISTS workouts"))
     {
         qDebug() << "Table dropped.";
     }
@@ -47,8 +48,8 @@ bool DataManager::initDatabase()
         const QSqlError error = query.lastError();
         qDebug() << "Drop table error: " + error.text();
     }
-
-    const QString createSQL = "CREATE TABLE workouts "
+    */
+    const QString createSQL = "CREATE TABLE IF NOT EXISTS workouts "
                               "  (workoutID INTEGER PRIMARY KEY AUTOINCREMENT, "
                               "  strength VARCHAR, "
                               "  wod VARCHAR);";
@@ -80,11 +81,14 @@ bool DataManager::createRecord(const QString& strength, const QString& wod)
     if (query.exec())
     {
         success = true;
+        // refresh the data model
+        readRecords();
+        qDebug() << "Entry created: " << strength << " " << wod;
     }
     else
     {
         const QSqlError error = query.lastError();
-        qDebug() << "Create record error: " + error.text();
+        qDebug() << "Create record - SQL error: " + error.text();
     }
 
     database.close();
@@ -104,7 +108,7 @@ bool DataManager::updateRecord(const QString& workoutID, const QString& strength
     QSqlDatabase database = QSqlDatabase::database();
     QSqlQuery query(database);
     const QString sqlCommand = "UPDATE workouts "
-                               "    SET stregnth = :strength, wod = :wod"
+                               "    SET strength = :strength, wod = :wod"
                                "    WHERE workoutID = :workoutID";
     query.prepare(sqlCommand);
 
@@ -116,13 +120,17 @@ bool DataManager::updateRecord(const QString& workoutID, const QString& strength
     if (query.exec())
     {
         if (query.numRowsAffected() > 0)
+        {
             updated = true;
+            // refresh the data model
+            readRecords();
+        }
         else
             qDebug() << "Did not find workout ID " << workoutID;
     }
     else
     {
-        qDebug() << "SQL error: " << query.lastError().text();
+        qDebug() << "Update record - SQL error: " << query.lastError().text();
     }
 
     database.close();
@@ -148,13 +156,17 @@ bool DataManager::deleteRecord(const QString &workoutID)
     if (query.exec())
     {
         if (query.numRowsAffected() > 0)
+        {
             deleted = true;
+            // refresh the data model
+            readRecords();
+        }
         else
             qDebug() << "Did not find workout ID " << workoutID;
     }
     else
     {
-        qDebug() << "SQL error: " << query.lastError().text();
+        qDebug() << "Delete record - SQL error: " << query.lastError().text();
     }
 
     database.close();
