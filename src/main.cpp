@@ -1,8 +1,8 @@
-#include <bb/cascades/Application>
+#include "crossfit.hpp"
 
+#include <bb/cascades/Application>
 #include <QLocale>
 #include <QTranslator>
-#include "crossfit.hpp"
 
 // include JS Debugger / CS Profiler enabler
 // this feature is enabled by default in the debug build only
