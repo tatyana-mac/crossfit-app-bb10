@@ -13,7 +13,7 @@ DataManager::DataManager()
     : m_dataModel(0)
 {
     initDataModel();
-    initDatabase();
+    initData();
     readRecords();
 }
 
@@ -25,7 +25,7 @@ void DataManager::initDataModel()
     m_dataModel->setGrouping(ItemGrouping::None);
 }
 
-bool DataManager::initDatabase()
+bool DataManager::initData()
 {
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
     database.setDatabaseName("./data/crossfitDatabase.db");
@@ -64,7 +64,43 @@ bool DataManager::initDatabase()
         return false;
     }
 
+    //initExerciseTypes();
+    //initWodNames();
+
     return true;
+}
+
+void DataManager::initExerciseTypes()
+{
+    // TODO: allow the user to modify the list, put this in the database so that I can refer to these using their IDs
+    m_excerciseTypeList.clear();
+    m_excerciseTypeList.append(tr("Front Squat"));
+    m_excerciseTypeList.append(tr("High Bar Back Squat"));
+    m_excerciseTypeList.append(tr("Clean"));
+    m_excerciseTypeList.append(tr("Hang Snatch"));
+    m_excerciseTypeList.append(tr("Split Snatch"));
+    m_excerciseTypeList.append(tr("Jerk"));
+    m_excerciseTypeList.append(tr("Push Jerk"));
+    m_excerciseTypeList.append(tr("Overhead Squat"));
+    m_excerciseTypeList.append(tr("Push Press"));
+    m_excerciseTypeList.append(tr("Push Jerk"));
+    m_excerciseTypeList.append(tr("Bench Press"));
+    m_excerciseTypeList.append(tr("Thruster"));
+    m_excerciseTypeList.append(tr("Snatch"));
+    m_excerciseTypeList.append(tr("Deadlift"));
+
+    qSort(m_excerciseTypeList.begin(), m_excerciseTypeList.end());
+}
+
+void DataManager::initWodNames()
+{
+    // TODO: allow the user to modify the list, put this in the database so that I can refer to these using their IDs
+    m_wodNameList.clear();
+    m_wodNameList.append(tr("Claudia"));
+    m_wodNameList.append(tr("Cindy"));
+    m_wodNameList.append(tr("Fran"));
+
+    qSort(m_wodNameList.begin(), m_excerciseTypeList.end());
 }
 
 bool DataManager::createRecord(const QString& strength, const QString& wod)
@@ -209,4 +245,24 @@ void DataManager::readRecords()
 GroupDataModel* DataManager::dataModel() const
 {
     return m_dataModel;
+}
+
+QList<QString> DataManager::getExerciseTypes() const
+{
+    return m_excerciseTypeList;
+}
+
+QList<QString> DataManager::getWodNames() const
+{
+    return m_wodNameList;
+}
+
+int DataManager::getExerciseId(const QString& ex) const
+{
+    return m_excerciseTypeList.indexOf(ex);
+}
+
+int DataManager::getWodNameId(const QString& wod) const
+{
+    return m_wodNameList.indexOf(wod);
 }
