@@ -19,16 +19,25 @@ public:
     Q_INVOKABLE bool updateRecord(const QString &key, const QString& strength, const QString& wod);
     Q_INVOKABLE bool deleteRecord(const QString &key);
 
+    Q_INVOKABLE QList<QString> getExerciseTypes() const;
+    Q_INVOKABLE QList<QString> getWodNames() const;
+
 private:
     // Functions to call upon initialization to setup the model and database
     void initDataModel();
-    bool initDatabase();
+    bool initData();
+    void initExerciseTypes();
+    void initWodNames();
+    int getExerciseId(const QString& ex) const;
+    int getWodNameId(const QString& wod) const;
 
     // The getter method for the property
     bb::cascades::GroupDataModel* dataModel() const;
 
-    // The data shown by the list view.
-    GroupDataModel* m_dataModel;
+private:
+    GroupDataModel* m_dataModel; // data shown by the workout list view
+    QList<QString> m_excerciseTypeList; // the list of exercise types
+    QList<QString> m_wodNameList; // the list of wod names
 };
 
 #endif
