@@ -4,83 +4,82 @@
 <context>
     <name>DataManager</name>
     <message>
-        <location filename="../src/DataManager.cpp" line="77"/>
+        <location filename="../src/DataManager.cpp" line="26"/>
         <source>Front Squat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="78"/>
+        <location filename="../src/DataManager.cpp" line="27"/>
         <source>High Bar Back Squat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="79"/>
+        <location filename="../src/DataManager.cpp" line="28"/>
         <source>Clean</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="80"/>
+        <location filename="../src/DataManager.cpp" line="29"/>
         <source>Hang Snatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="81"/>
+        <location filename="../src/DataManager.cpp" line="30"/>
         <source>Split Snatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="82"/>
+        <location filename="../src/DataManager.cpp" line="31"/>
         <source>Jerk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="83"/>
-        <location filename="../src/DataManager.cpp" line="86"/>
+        <location filename="../src/DataManager.cpp" line="32"/>
         <source>Push Jerk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="84"/>
+        <location filename="../src/DataManager.cpp" line="33"/>
         <source>Overhead Squat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="85"/>
+        <location filename="../src/DataManager.cpp" line="34"/>
         <source>Push Press</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="87"/>
+        <location filename="../src/DataManager.cpp" line="35"/>
         <source>Bench Press</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="88"/>
+        <location filename="../src/DataManager.cpp" line="36"/>
         <source>Thruster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="89"/>
+        <location filename="../src/DataManager.cpp" line="37"/>
         <source>Snatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="90"/>
+        <location filename="../src/DataManager.cpp" line="38"/>
         <source>Deadlift</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="99"/>
+        <location filename="../src/DataManager.cpp" line="45"/>
         <source>Claudia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="100"/>
+        <location filename="../src/DataManager.cpp" line="46"/>
         <source>Cindy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/DataManager.cpp" line="101"/>
+        <location filename="../src/DataManager.cpp" line="47"/>
         <source>Fran</source>
         <translation type="unfinished"></translation>
     </message>

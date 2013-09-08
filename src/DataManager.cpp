@@ -9,12 +9,48 @@
 using namespace bb::cascades;
 using namespace bb::data;
 
+const QList<QString> DataManager::DEFAULT_EXERCISE_TYPES = DataManager::getDefaultExerciseTypes();
+const QList<QString> DataManager::DEFAULT_WOD_TYPES = DataManager::getDefaultWodTypes();
+
 DataManager::DataManager()
     : m_dataModel(0)
 {
     initDataModel();
     initData();
     readRecords();
+}
+
+QList<QString> DataManager::getDefaultExerciseTypes()
+{
+    QList<QString> exTypes;
+    exTypes.append(tr("Front Squat"));
+    exTypes.append(tr("High Bar Back Squat"));
+    exTypes.append(tr("Clean"));
+    exTypes.append(tr("Hang Snatch"));
+    exTypes.append(tr("Split Snatch"));
+    exTypes.append(tr("Jerk"));
+    exTypes.append(tr("Push Jerk"));
+    exTypes.append(tr("Overhead Squat"));
+    exTypes.append(tr("Push Press"));
+    exTypes.append(tr("Bench Press"));
+    exTypes.append(tr("Thruster"));
+    exTypes.append(tr("Snatch"));
+    exTypes.append(tr("Deadlift"));
+    return exTypes;
+}
+
+QList<QString> DataManager::getDefaultWodTypes()
+{
+    QList<QString> wodTypes;
+    wodTypes.append(tr("Claudia"));
+    wodTypes.append(tr("Cindy"));
+    wodTypes.append(tr("Fran"));
+    return wodTypes;
+}
+
+bool sortByName(const QVariant& val1, const QVariant& val2)
+{
+    return val1.toMap()["name"].toString().compare(val2.toMap()["name"].toString()) < 0;
 }
 
 void DataManager::initDataModel()
@@ -38,7 +74,6 @@ bool DataManager::initData()
     }
 
     QSqlQuery query(database);
-    // remove this once basic operations are working
     /*if (query.exec("DROP TABLE IF EXISTS workouts"))
     {
         qDebug() << "Table dropped.";
@@ -55,52 +90,115 @@ bool DataManager::initData()
                               "  wod VARCHAR);";
     if (query.exec(createSQL))
     {
-        qDebug() << "Table created.";
+        qDebug() << "Workout table created.";
     }
     else
     {
         const QSqlError error = query.lastError();
-        qDebug() << "Create table error: " + error.text();
+        qDebug() << "Create workout table error: " + error.text();
         return false;
     }
 
-    //initExerciseTypes();
-    //initWodNames();
+    initExerciseTypes(database);
+    initWodTypes(database);
 
     return true;
 }
 
-void DataManager::initExerciseTypes()
+void DataManager::initExerciseTypes(QSqlDatabase& database)
 {
-    // TODO: allow the user to modify the list, put this in the database so that I can refer to these using their IDs
-    m_excerciseTypeList.clear();
-    m_excerciseTypeList.append(tr("Front Squat"));
-    m_excerciseTypeList.append(tr("High Bar Back Squat"));
-    m_excerciseTypeList.append(tr("Clean"));
-    m_excerciseTypeList.append(tr("Hang Snatch"));
-    m_excerciseTypeList.append(tr("Split Snatch"));
-    m_excerciseTypeList.append(tr("Jerk"));
-    m_excerciseTypeList.append(tr("Push Jerk"));
-    m_excerciseTypeList.append(tr("Overhead Squat"));
-    m_excerciseTypeList.append(tr("Push Press"));
-    m_excerciseTypeList.append(tr("Push Jerk"));
-    m_excerciseTypeList.append(tr("Bench Press"));
-    m_excerciseTypeList.append(tr("Thruster"));
-    m_excerciseTypeList.append(tr("Snatch"));
-    m_excerciseTypeList.append(tr("Deadlift"));
+    QSqlQuery query(database);
+    /*if (query.exec("DROP TABLE IF EXISTS exerciseTypes"))
+    {
+        qDebug() << "Exercise table dropped.";
+    }
+    else
+    {
+        const QSqlError error = query.lastError();
+        qDebug() << "Drop table error: " + error.text();
+    }*/
 
-    qSort(m_excerciseTypeList.begin(), m_excerciseTypeList.end());
+    QString request = "CREATE TABLE IF NOT EXISTS exerciseTypes "
+                      "  (exerciseID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                      "  name VARCHAR);";
+    if (query.exec(request))
+    {
+        qDebug() << "Exercise table created.";
+    }
+    else
+    {
+        const QSqlError error = query.lastError();
+        qDebug() << "Create exercise table error: " + error.text();
+        return;
+    }
+    // see if the table is empty, populate with defaults if yes
+    int exCount = 0;
+    if (query.exec("SELECT COUNT(*) FROM exerciseTypes;"))
+    {
+        query.next();
+        exCount = query.value(0).toInt();
+        qDebug() << "Existing exercise number: " << exCount;
+    }
+    if (exCount == 0)
+    {
+        for (int i = 0; i < DEFAULT_EXERCISE_TYPES.size(); ++i)
+        {
+            query.prepare("INSERT INTO exerciseTypes"
+                          "    (name) "
+                          "    VALUES (:name)");
+            query.bindValue(":name", DEFAULT_EXERCISE_TYPES[i]);
+            if (!query.exec())
+                qDebug() << "Insert exercise type - SQL error: " + query.lastError().text();
+        }
+    }
 }
 
-void DataManager::initWodNames()
+void DataManager::initWodTypes(QSqlDatabase& database)
 {
-    // TODO: allow the user to modify the list, put this in the database so that I can refer to these using their IDs
-    m_wodNameList.clear();
-    m_wodNameList.append(tr("Claudia"));
-    m_wodNameList.append(tr("Cindy"));
-    m_wodNameList.append(tr("Fran"));
+    QSqlQuery query(database);
+    /*if (query.exec("DROP TABLE IF EXISTS wodTypes"))
+    {
+        qDebug() << "WOD table dropped.";
+    }
+    else
+    {
+        const QSqlError error = query.lastError();
+        qDebug() << "Drop table error: " + error.text();
+    }*/
 
-    qSort(m_wodNameList.begin(), m_excerciseTypeList.end());
+    QString request = "CREATE TABLE IF NOT EXISTS wodTypes "
+                      "  (wodID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                      "  name VARCHAR);";
+    if (query.exec(request))
+    {
+        qDebug() << "WOD table created.";
+    }
+    else
+    {
+        const QSqlError error = query.lastError();
+        qDebug() << "Create WOD table error: " + error.text();
+        return;
+    }
+    // see if the table is empty, populate with defaults if yes
+    int exCount = 0;
+    if (query.exec("SELECT COUNT(*) FROM wodTypes;"))
+    {
+        query.next();
+        exCount = query.value(0).toInt();
+        qDebug() << "Existing WOD number: " << exCount;
+    }
+    if (exCount == 0)
+    {
+        for (int i = 0; i < DEFAULT_WOD_TYPES.size(); ++i)
+        {
+            query.prepare("INSERT INTO wodTypes"
+                          "    (name) "
+                          "    VALUES (:name)");
+            query.bindValue(":name", DEFAULT_WOD_TYPES[i]);
+            if (!query.exec())
+                qDebug() << "Insert WOD type - SQL error: " + query.lastError().text();
+        }
+    }
 }
 
 bool DataManager::createRecord(const QString& strength, const QString& wod)
@@ -242,27 +340,53 @@ void DataManager::readRecords()
     database.close();
 }
 
+QVariantList DataManager::getExerciseTypes() const
+{
+    QSqlDatabase database = QSqlDatabase::database();
+    QSqlQuery query(database);
+    QVariantList result;
+
+    if (query.exec("SELECT exerciseID, name FROM exerciseTypes"))
+    {
+        while (query.next())
+        {
+            QVariantMap exerciseType;
+            exerciseType["id"] = query.value(0).toInt();
+            exerciseType["name"] = query.value(1).toString();
+            result.append(exerciseType);
+        }
+    }
+    else
+        qDebug() << "Reading exercise types error: " << query.lastError().text();
+
+    qSort(result.begin(), result.end(), sortByName);
+    return result;
+}
+
+QVariantList DataManager::getWodTypes() const
+{
+    QSqlDatabase database = QSqlDatabase::database();
+    QSqlQuery query(database);
+    QVariantList result;
+
+    if (query.exec("SELECT wodID, name FROM wodTypes"))
+    {
+        while (query.next())
+        {
+            QVariantMap wodType;
+            wodType["id"] = query.value(0).toInt();
+            wodType["name"] = query.value(1).toString();
+            result.append(wodType);
+        }
+    }
+    else
+        qDebug() << "Reading WOD types error: " << query.lastError().text();
+
+    qSort(result.begin(), result.end(), sortByName);
+    return result;
+}
+
 GroupDataModel* DataManager::dataModel() const
 {
     return m_dataModel;
-}
-
-QList<QString> DataManager::getExerciseTypes() const
-{
-    return m_excerciseTypeList;
-}
-
-QList<QString> DataManager::getWodNames() const
-{
-    return m_wodNameList;
-}
-
-int DataManager::getExerciseId(const QString& ex) const
-{
-    return m_excerciseTypeList.indexOf(ex);
-}
-
-int DataManager::getWodNameId(const QString& wod) const
-{
-    return m_wodNameList.indexOf(wod);
 }
